@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Ect::Share do
+describe EctShares::Share do
 
   describe "TODO" do
     it "PENDING"
