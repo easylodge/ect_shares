@@ -1,0 +1,4 @@
+class EctShares::Calculator
+
+
+end
