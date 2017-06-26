@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ['Jean le Roux']
   spec.email         = ['info@easylodge.com.au']
   spec.summary       = 'ECT shareholder information.'
-  spec.description   = 'ECT shareholder allocations, pricing and detail'
+  spec.description   = 'ECT shareholder allocations, pricing and calculations'
   spec.homepage      = 'https://github.com/easylodge/ect_shares'
   spec.license       = 'None'
 
@@ -26,6 +26,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'sqlite3'
   spec.add_development_dependency 'shoulda-matchers'
   spec.add_development_dependency 'pry'
-  spec.add_dependency 'csv'
   spec.add_dependency 'activesupport'
 end
