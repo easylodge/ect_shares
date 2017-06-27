@@ -68,51 +68,78 @@ describe EctShares::Calculator do
       subject.deposit = rand(999)
       expect(subject.purchase_price).to eq(subject.strike_price - subject.deposit)
     end
+
+    it "ensures values are always at least 0" do
+      allow(subject).to receive(:strike_price).and_return(0)
+      subject.deposit = rand(999)
+      expect(subject.purchase_price).to eq(0)
+    end
   end
 
   describe ".lsr" do
     it "returns the ratio of purchase_price to strike_price" do
       allow(subject).to receive(:strike_price).and_return(rand(1000).to_f + 1)
-      allow(subject).to receive(:purchase_price).and_return(rand(1000).to_f + 1)
+      allow(subject).to receive(:purchase_price).and_return(rand(subject.strike_price).to_f)
       expect(subject.lsr()).to eq(subject.purchase_price / subject.strike_price)
     end
 
     it "returns a decimal value" do
-      allow(subject).to receive(:strike_price).and_return(3)
-      allow(subject).to receive(:purchase_price).and_return(10)
-      expect(subject.lsr()).to be > 3.3333
+      allow(subject).to receive(:strike_price).and_return(rand(1000).to_f + 1)
+      allow(subject).to receive(:purchase_price).and_return(rand(subject.strike_price).to_f)
+      expect(subject.lsr()).to be_between(0, 1).inclusive
+    end
+
+    it "returns 100% lst no strike price if strike_price is zero" do
+      allow(subject).to receive(:strike_price).and_return(0)
+      allow(subject).to receive(:purchase_price).and_return(rand(1000).to_f + 1)
+      expect(subject.lsr()).to eq(1.0)
     end
   end
 
-  describe ".get_rate" do
+  describe ".rate" do
     before(:each) do
       subject.share.unit_price = rand(100)
-      subject.share.available_units = 9999
       subject.count = 999
+      subject.share.available_units = rand(1000) + subject.count
       subject.payment_method = EctShares::Calculator::PAYMENT_METHODS.sample
       # allow_any_instance_of(subject.class).to receive(:lsr).and_return(99)
     end
 
     it "requires a valid payment method to be set" do
-      expect(subject.get_rate()).not_to eq(nil)
-
+      expect(subject.rate()).not_to eq(nil)
       subject.payment_method = nil
-      expect(subject.get_rate()).to eq(nil)
+      expect(subject.rate()).to eq(nil)
     end
 
     it "returns the rate for the lsr provided" do
       prep = [
-        ['40', '12 months advance', 3.13],
-        ['60', '6 months advance', 6.63],
-        ['85', '6 months arrears', 8.63]
+        [45/100.0, '12 months advance', 3.13],
+        [60/100.0, '6 months advance', 6.63],
+        [85/100.0, '6 months arrears', 8.63],
       ]
       prep.each do |vals|
         allow(subject).to receive(:lsr).and_return(vals[0].to_f)
         subject.payment_method = vals[1]
-        expect(subject.get_rate()).to eq(vals[2])
+        expect(subject.rate()).to eq(vals[2])
       end
     end
   end
 
+  describe ".advance?" do
+    it "returns true if 'advance' occurs in the payment method" do
+      EctShares::Calculator::PAYMENT_METHODS.each do |pmt|
+        subject.payment_method = pmt
+        expect(subject.advance?).to eq(subject.payment_method.include?('advance'))
+      end
+    end
+  end
 
+  describe ".arrears?" do
+    it "returns true if 'arrears' occurs in the payment method" do
+      EctShares::Calculator::PAYMENT_METHODS.each do |pmt|
+        subject.payment_method = pmt
+        expect(subject.arrears?).to eq(subject.payment_method.include?('arrears'))
+      end
+    end
+  end
 end

@@ -48,21 +48,34 @@ class EctShares::Calculator
   end
 
   def purchase_price
-    strike_price - self.deposit
+    [strike_price - self.deposit, 0].max
   end
 
+  # NOTE: this return the ratio of how much money we need to borrow, vs how much the shares actualy cost
+  # always between 0 and 1
   def lsr
-    1.0*purchase_price / strike_price
+    # NOTE: force type coersion to decimal
+    [1.0*purchase_price / strike_price, 1].min
+  rescue
+    1.0
   end
 
-  def get_rate
+  def rate
     return unless PAYMENT_METHODS.include?(self.payment_method)
 
-    INTEREST_TABLE.sort{|a, b| a.first.to_s.to_i <=> b.first.to_s.to_i}.each do |lsr_cap_str, rates|
-      lsr_cap = lsr_cap_str.to_s.to_f
+    INTEREST_TABLE.sort{|a, b| a.first.to_s.to_i <=> b.first.to_s.to_i}.each do |lsr_cap, rates|
+      lsr_cap = lsr_cap.to_s.to_f/100.0
       if lsr_cap >= self.lsr
         return rates[self.payment_method.to_sym]
       end
     end
+  end
+
+  def advance?
+    @payment_method.include?('advance')
+  end
+
+  def arrears?
+    @payment_method.include?('arrears')
   end
 end
