@@ -66,6 +66,7 @@ describe EctShares::Calculator do
 
     it "subtracts the deposit from the strike price" do
       subject.deposit = rand(999)
+      allow(subject).to receive(:strike_price).and_return(rand(999) + subject.deposit)
       expect(subject.purchase_price).to eq(subject.strike_price - subject.deposit)
     end
 
@@ -140,6 +141,23 @@ describe EctShares::Calculator do
         subject.payment_method = pmt
         expect(subject.arrears?).to eq(subject.payment_method.include?('arrears'))
       end
+    end
+  end
+
+  describe ".unit_price" do
+    it "returns 0.9 for ESIOA" do
+      subject.share.kind = EctShares::Share::ESIOA
+      expect(subject.unit_price).to eq(0.9)
+    end
+
+    it "returns 1.5 for ESIOB" do
+      subject.share.kind = EctShares::Share::ESIOB
+      expect(subject.unit_price).to eq(1.5)
+    end
+
+    it "returns 0,0 for unkown" do
+      subject.share.kind = 'invalid'
+      expect(subject.unit_price).to eq(0.0)
     end
   end
 end
