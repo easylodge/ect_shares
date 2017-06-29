@@ -1,6 +1,9 @@
 class EctShares::Share < ActiveRecord::Base
   self.table_name = "ect_shares_share"
 
+  validates :holder_number, presence: true
+  validates :postcode, presence: true
+
   ESIOA = 'ESIOA'
   ESIOB = 'ESIOB'
 

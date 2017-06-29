@@ -1,6 +1,23 @@
 require 'spec_helper'
 
 describe EctShares::Share do
+  # TODO: I cannot get these to work, seems it fails to load the correct validation matcher function.
+  # it {expect(subject).to validate_presence_of(:holder_number)}
+  # it {expect(subject).to validate_presence_of(:postcode)}
+
+  describe "validation" do
+    it "requires holder_number to be present" do
+      subject.holder_number = nil
+      subject.valid?
+      expect(subject.errors[:holder_number]).to eq (["can't be blank"])
+    end
+
+    it "requires postcode to be present" do
+      subject.postcode = nil
+      subject.valid?
+      expect(subject.errors[:postcode]).to eq (["can't be blank"])
+    end
+  end
 
   describe "share types" do
     ['ESIOA', 'ESIOB'].each do |st|

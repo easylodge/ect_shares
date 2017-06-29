@@ -17,7 +17,14 @@ namespace :ect_shares do
     json.each do |record|
       attrs = map_import_to_model_attrs(record)
       share = EctShares::Share.new(attrs)
-      unless share.save
+      if share.valid?
+        begin
+          share.save
+        rescue e
+          puts "Unexpected errror: #{e}"
+          puts "share data: #{record}"
+        end
+      else
         puts "Invalid share record: #{record}"
       end
     end
