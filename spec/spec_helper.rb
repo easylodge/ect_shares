@@ -1,6 +1,5 @@
 require 'bundler/setup'
-require 'ect_shares/share'
-require 'ect_shares/calculator'
+require 'ect_shares'
 require 'shoulda/matchers'
 require 'pry'
 Bundler.setup

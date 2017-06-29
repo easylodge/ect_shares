@@ -52,9 +52,9 @@ Then run migrations:
   buy_options - how many shares are being purchased
   max_options - maximum number of shares available for purchase
   unit_price - price per share (esioa = 9c, esiob = 1.5c)
-  strike_price_amount - unit_price * buy_options
-  deposit_amount - cash deposit on purchase
-  purchase_price_mount - strike_price_amount - deposit_amount
+  strike_price - unit_price * buy_options
+  deposit - cash deposit on purchase
+  purchase_price - strike_price - deposit
   lsr - ratio of purchase_price_mount / strike_price_amount
   payment_plan - 6 months advance; 12 months advance; 6 months arrears
   interest_rate - derived from lookup table
