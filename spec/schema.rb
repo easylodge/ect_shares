@@ -19,4 +19,6 @@ ActiveRecord::Schema.define do
     t.timestamps
   end
 
+  add_index "ect_shares_share", [:holder_number, :postcode], unique: true
+
 end

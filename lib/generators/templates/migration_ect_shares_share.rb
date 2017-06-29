@@ -18,6 +18,9 @@ class CreateEctSharesShare < ActiveRecord::Migration
         t.string :email_address
         t.timestamps
       end
+
+      add_index "ect_shares_share", [:holder_number, :postcode], unique: true
+
     end
   end
 
