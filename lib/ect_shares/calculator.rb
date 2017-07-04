@@ -43,7 +43,7 @@ class EctShares::Calculator
   end
 
   def strike_price
-    share.unit_price * [count, share.available_units].min
+    unit_price * [count, share.available_units].min
   end
 
   def purchase_price
