@@ -145,14 +145,14 @@ describe EctShares::Calculator do
   end
 
   describe ".unit_price" do
-    it "returns 0.9 for ESIOA" do
+    it "returns 0.009 for ESIOA" do
       subject.share.kind = EctShares::Share::ESIOA
-      expect(subject.unit_price).to eq(0.9)
+      expect(subject.unit_price).to eq(0.009)
     end
 
-    it "returns 1.5 for ESIOB" do
+    it "returns 0.015 for ESIOB" do
       subject.share.kind = EctShares::Share::ESIOB
-      expect(subject.unit_price).to eq(1.5)
+      expect(subject.unit_price).to eq(0.015)
     end
 
     it "returns 0,0 for unkown" do
