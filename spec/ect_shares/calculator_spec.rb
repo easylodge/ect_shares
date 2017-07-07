@@ -42,18 +42,18 @@ describe EctShares::Calculator do
 
   describe ".strike_price" do
     before(:each) do
-      subject.share.unit_price = rand(100)
+      subject.share.kind = [EctShares::Share::ESIOA, EctShares::Share::ESIOB].sample
       subject.share.available_units = 9999
       subject.count = 999
     end
 
     it "multiplies the unit price and the count" do
-      expect(subject.strike_price).to eq(999*subject.share.unit_price)
+      expect(subject.strike_price).to eq(999*subject.unit_price)
     end
 
     it "caps the units to the availble units" do
       subject.share.available_units = 10
-      expect(subject.strike_price).to eq(10*subject.share.unit_price)
+      expect(subject.strike_price).to eq(10*subject.unit_price)
     end
   end
 
