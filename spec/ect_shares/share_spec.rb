@@ -30,7 +30,7 @@ describe EctShares::Share do
   describe ".kind" do
     context "with A shares" do
       it "returns the first kind of available shares" do
-        subject.esioa = rand(100)
+        subject.esioa = rand(100)+1
         subject.esiob = rand(100)
         expect(subject.kind).to eq(subject.class::ESIOA)
       end
@@ -39,7 +39,7 @@ describe EctShares::Share do
     context "with B shares" do
       it "returns the first kind of available shares" do
         subject.esioa = 0
-        subject.esiob = rand(100)
+        subject.esiob = rand(100)+1
         expect(subject.kind).to eq(subject.class::ESIOB)
       end
     end

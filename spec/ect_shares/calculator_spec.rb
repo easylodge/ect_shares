@@ -97,35 +97,6 @@ describe EctShares::Calculator do
     end
   end
 
-  describe ".rate" do
-    before(:each) do
-      subject.share.unit_price = rand(100)
-      subject.count = 999
-      subject.share.available_units = rand(1000) + subject.count
-      subject.payment_method = EctShares::Calculator::PAYMENT_METHODS.sample
-      # allow_any_instance_of(subject.class).to receive(:lsr).and_return(99)
-    end
-
-    it "requires a valid payment method to be set" do
-      expect(subject.rate()).not_to eq(nil)
-      subject.payment_method = nil
-      expect(subject.rate()).to eq(nil)
-    end
-
-    it "returns the rate for the lsr provided" do
-      prep = [
-        [45/100.0, '12 months advance', 3.13],
-        [60/100.0, '6 months advance', 6.63],
-        [85/100.0, '6 months arrears', 8.63],
-      ]
-      prep.each do |vals|
-        allow(subject).to receive(:lsr).and_return(vals[0].to_f)
-        subject.payment_method = vals[1]
-        expect(subject.rate()).to eq(vals[2])
-      end
-    end
-  end
-
   describe ".advance?" do
     it "returns true if 'advance' occurs in the payment method" do
       EctShares::Calculator::PAYMENT_METHODS.each do |pmt|
@@ -147,12 +118,12 @@ describe EctShares::Calculator do
   describe ".unit_price" do
     it "returns 0.9 for ESIOA" do
       subject.share.kind = EctShares::Share::ESIOA
-      expect(subject.unit_price).to eq(0.9)
+      expect(subject.unit_price).to eq(0.9/100.0)
     end
 
     it "returns 1.5 for ESIOB" do
       subject.share.kind = EctShares::Share::ESIOB
-      expect(subject.unit_price).to eq(1.5)
+      expect(subject.unit_price).to eq(1.5/100.0)
     end
 
     it "returns 0,0 for unkown" do
