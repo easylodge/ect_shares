@@ -81,9 +81,9 @@ class EctShares::Calculator
   def unit_price
     case share.kind
     when EctShares::Share::ESIOA
-      0.9
+      0.009
     when EctShares::Share::ESIOB
-      1.5
+      0.015
     else
       0.0
     end
