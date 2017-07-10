@@ -1,20 +1,23 @@
 class EctShares::Calculator
 
-  PAYMENT_METHODS = ['6 months arrears', '6 months advance', '12 months advance', 'default']
+  PAYMENT_METHODS = ['6 months arrears', '6 months advance', '12 months advance']
 
   attr_accessor :count
   attr_accessor :share
   attr_accessor :deposit
   attr_accessor :payment_method
+  attr_accessor :share_type
 
   def initialize(share)
     @share = share
     @deposit = 0
     @count = 0
     @payment_method = nil
+    @share_type = nil
   end
 
   def strike_price
+
     unit_price * [count, share.available_units].min
   end
 
@@ -40,10 +43,10 @@ class EctShares::Calculator
   end
 
   def unit_price
-    case share.kind
-    when EctShares::Share::ESIOA
+    case share_type
+    when EctShares::Share::SHARE_TYPES[0] #ESIOA
       0.9/100.0 # 0.9 cents
-    when EctShares::Share::ESIOB
+    when EctShares::Share::SHARE_TYPES[1] #ESIOB
       1.5/100.0 # 1.5 cents
     else
       0.0

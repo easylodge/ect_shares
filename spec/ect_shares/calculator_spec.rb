@@ -9,7 +9,7 @@ describe EctShares::Calculator do
   it {expect(subject).to respond_to(:payment_method)}
 
   describe "PAYMENT_METHODS" do
-    payment_methods = ['6 months arrears', '6 months advance', '12 months advance', 'default']
+    payment_methods = ['6 months arrears', '6 months advance', '12 months advance']
 
     it "contains all valid PAYMENT_METHODS" do
       payment_methods.each do |pmt|
@@ -42,7 +42,7 @@ describe EctShares::Calculator do
 
   describe ".strike_price" do
     before(:each) do
-      subject.share.kind = [EctShares::Share::ESIOA, EctShares::Share::ESIOB].sample
+      subject.share_type = EctShares::Share::SHARE_TYPES.sample
       subject.share.available_units = 9999
       subject.count = 999
     end
@@ -117,12 +117,12 @@ describe EctShares::Calculator do
 
   describe ".unit_price" do
     it "returns 0.009 for ESIOA" do
-      subject.share.kind = EctShares::Share::ESIOA
+      subject.share_type = EctShares::Share::SHARE_TYPES[0]
       expect(subject.unit_price).to eq(0.9/100.0)
     end
 
     it "returns 0.015 for ESIOB" do
-      subject.share.kind = EctShares::Share::ESIOB
+      subject.share_type = EctShares::Share::SHARE_TYPES[1]
       expect(subject.unit_price).to eq(1.5/100.0)
     end
 
