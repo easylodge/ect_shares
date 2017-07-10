@@ -6,19 +6,18 @@ class EctShares::Calculator
   attr_accessor :share
   attr_accessor :deposit
   attr_accessor :payment_method
-  attr_accessor :share_type
+  attr_accessor :kind
 
   def initialize(share)
     @share = share
     @deposit = 0
     @count = 0
     @payment_method = nil
-    @share_type = nil
+    @kind = nil
   end
 
   def strike_price
-
-    unit_price * [count, share.available_units].min
+    unit_price * [count, share.available_units(kind)].min
   end
 
   def purchase_price
@@ -43,10 +42,10 @@ class EctShares::Calculator
   end
 
   def unit_price
-    case share_type
-    when EctShares::Share::SHARE_TYPES[0] #ESIOA
+    case kind
+    when EctShares::Share::SHARE_KINDS[0] #ESIOA
       0.9/100.0 # 0.9 cents
-    when EctShares::Share::SHARE_TYPES[1] #ESIOB
+    when EctShares::Share::SHARE_KINDS[1] #ESIOB
       1.5/100.0 # 1.5 cents
     else
       0.0

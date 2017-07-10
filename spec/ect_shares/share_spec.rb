@@ -19,10 +19,10 @@ describe EctShares::Share do
     end
   end
 
-  describe "share types" do
-    share_types = ['ESIOA', 'ESIOB'].sort
-    it "defines a list of share types" do
-      expect(subject.class::SHARE_TYPES).to eq(share_types)
+  describe "share kinds" do
+    share_kinds = ['ESIOA', 'ESIOB'].sort
+    it "defines a list of share kinds" do
+      expect(EctShares::Share::SHARE_KINDS).to eq(share_kinds)
     end
   end
 
@@ -65,7 +65,7 @@ describe EctShares::Share do
       it "returns 0" do
         subject.esioa = nil
         subject.esiob = nil
-        expect(subject.available_units(EctShares::Share::SHARE_TYPES.sample)).to eq(0)
+        expect(subject.available_units(EctShares::Share::SHARE_KINDS.sample)).to eq(0)
       end
     end
 
@@ -89,13 +89,13 @@ describe EctShares::Share do
         subject.esiob = rand(1..100)
       end
 
-      EctShares::Share::SHARE_TYPES.each do |type|
-        it "returns the number of shares of the requested type: #{type}" do
-          expect(subject.available_units(type)).to eq(subject.send("#{type.downcase}"))
+      EctShares::Share::SHARE_KINDS.each do |kind|
+        it "returns the number of shares of the requested kind: #{kind}" do
+          expect(subject.available_units(kind)).to eq(subject.send("#{kind.downcase}"))
         end
       end
 
-      it "returns 0 if the requested type is unknown" do
+      it "returns 0 if the requested kind is unknown" do
         expect(subject.available_units('bogus')).to eq(0)
       end
     end

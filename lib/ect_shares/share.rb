@@ -1,7 +1,7 @@
 class EctShares::Share < ActiveRecord::Base
   self.table_name = "ect_shares_share"
 
-  SHARE_TYPES = ['ESIOA', 'ESIOB'].sort
+  SHARE_KINDS = ['ESIOA', 'ESIOB'].sort
 
   validates :holder_number, presence: true
   validates :postcode, presence: true
@@ -14,9 +14,8 @@ class EctShares::Share < ActiveRecord::Base
     esiob.to_i > 0
   end
 
-  def available_units(share_type=nil)
-    p "available_units(#{share_type})  : #{esioa.to_i}, #{esiob.to_i}"
-    case share_type
+  def available_units(kind=nil)
+    case kind
     when 'ESIOA'
       esioa.to_i
     when 'ESIOB'
