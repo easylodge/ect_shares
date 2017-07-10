@@ -1,24 +1,28 @@
 class EctShares::Share < ActiveRecord::Base
   self.table_name = "ect_shares_share"
 
+  SHARE_KINDS = ['ESIOA', 'ESIOB'].sort
+
   validates :holder_number, presence: true
   validates :postcode, presence: true
 
-  ESIOA = 'ESIOA'
-  ESIOB = 'ESIOB'
-
-  def kind
-    if esioa > 0
-      ESIOA
-    elsif esiob > 0
-      ESIOB
-    else
-      nil
-    end
+  def esioa?
+    esioa.to_i > 0
   end
 
-  def available_units
-    [esioa.to_i, esiob.to_i].compact.detect{|x| x > 0} || 0
+  def esiob?
+    esiob.to_i > 0
+  end
+
+  def available_units(kind=nil)
+    case kind
+    when 'ESIOA'
+      esioa.to_i
+    when 'ESIOB'
+      esiob.to_i
+    else
+      0
+    end
   end
 
 end

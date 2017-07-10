@@ -7,9 +7,10 @@ describe EctShares::Calculator do
   it {expect(subject).to respond_to(:share)}
   it {expect(subject).to respond_to(:deposit)}
   it {expect(subject).to respond_to(:payment_method)}
+  it {expect(subject).to respond_to(:kind)}
 
   describe "PAYMENT_METHODS" do
-    payment_methods = ['6 months arrears', '6 months advance', '12 months advance', 'default']
+    payment_methods = ['6 months arrears', '6 months advance', '12 months advance']
 
     it "contains all valid PAYMENT_METHODS" do
       payment_methods.each do |pmt|
@@ -42,8 +43,8 @@ describe EctShares::Calculator do
 
   describe ".strike_price" do
     before(:each) do
-      subject.share.kind = [EctShares::Share::ESIOA, EctShares::Share::ESIOB].sample
-      subject.share.available_units = 9999
+      subject.kind = EctShares::Share::SHARE_KINDS.sample
+      allow_any_instance_of(OpenStruct).to receive(:available_units).with(any_args).and_return(9999)
       subject.count = 999
     end
 
@@ -52,7 +53,7 @@ describe EctShares::Calculator do
     end
 
     it "caps the units to the availble units" do
-      subject.share.available_units = 10
+      allow_any_instance_of(OpenStruct).to receive(:available_units).with(any_args).and_return(10)
       expect(subject.strike_price).to eq(10*subject.unit_price)
     end
   end
@@ -117,12 +118,12 @@ describe EctShares::Calculator do
 
   describe ".unit_price" do
     it "returns 0.009 for ESIOA" do
-      subject.share.kind = EctShares::Share::ESIOA
+      subject.kind = EctShares::Share::SHARE_KINDS[0]
       expect(subject.unit_price).to eq(0.9/100.0)
     end
 
     it "returns 0.015 for ESIOB" do
-      subject.share.kind = EctShares::Share::ESIOB
+      subject.kind = EctShares::Share::SHARE_KINDS[1]
       expect(subject.unit_price).to eq(1.5/100.0)
     end
 

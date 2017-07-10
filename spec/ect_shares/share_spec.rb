@@ -19,37 +19,34 @@ describe EctShares::Share do
     end
   end
 
-  describe "share types" do
-    ['ESIOA', 'ESIOB'].each do |st|
-      it "sets #{st}" do
-        expect(eval("subject.class::#{st}")).to eq(st)
-      end
+  describe "share kinds" do
+    share_kinds = ['ESIOA', 'ESIOB'].sort
+    it "defines a list of share kinds" do
+      expect(EctShares::Share::SHARE_KINDS).to eq(share_kinds)
     end
   end
 
-  describe ".kind" do
-    context "with A shares" do
-      it "returns the first kind of available shares" do
-        subject.esioa = rand(100)+1
-        subject.esiob = rand(100)
-        expect(subject.kind).to eq(subject.class::ESIOA)
-      end
+  describe ".esioa?" do
+    it "returns false if there are any ESIOA shares available" do
+      subject.esioa = 0
+      expect(subject.esioa?).to eq(false)
     end
 
-    context "with B shares" do
-      it "returns the first kind of available shares" do
-        subject.esioa = 0
-        subject.esiob = rand(100)+1
-        expect(subject.kind).to eq(subject.class::ESIOB)
-      end
+    it "returns true if there are any ESIOA shares available" do
+      subject.esioa = rand(1..10).to_s
+      expect(subject.esioa?).to eq(true)
+    end
+  end
+
+  describe ".esiob?" do
+    it "returns false if there are any ESIOB shares available" do
+      subject.esiob = 0
+      expect(subject.esiob?).to eq(false)
     end
 
-    context "with no shares" do
-      it "returns nil" do
-        subject.esioa = 0
-        subject.esiob = 0
-        expect(subject.kind).to eq(nil)
-      end
+    it "returns true if there are any ESIOB shares available" do
+      subject.esiob = rand(1..10).to_s
+      expect(subject.esiob?).to eq(true)
     end
   end
 
@@ -57,40 +54,49 @@ describe EctShares::Share do
     it "converts values to integer" do
       subject.esioa = rand(1..10).to_s
       subject.esiob = rand(1..10).to_s
-      expect(subject.available_units).to eq(subject.esioa.to_i)
+      expect(subject.available_units('ESIOA')).to eq(subject.esioa.to_i)
 
       subject.esioa = nil
       subject.esiob = rand(1..10).to_s
-      expect(subject.available_units).to eq(subject.esiob.to_i)
+      expect(subject.available_units('ESIOB')).to eq(subject.esiob.to_i)
     end
 
     context "witn no shares" do
       it "returns 0" do
         subject.esioa = nil
         subject.esiob = nil
-        expect(subject.available_units).to eq(0)
+        expect(subject.available_units(EctShares::Share::SHARE_KINDS.sample)).to eq(0)
       end
     end
 
     context "with A shares" do
       it "returns the number of shares" do
         subject.esioa = rand(100)
-        expect(subject.available_units).to eq(subject.esioa)
+        expect(subject.available_units('ESIOA')).to eq(subject.esioa)
       end
     end
 
     context "with B shares" do
       it "returns the number of shares" do
         subject.esiob = rand(100)
-        expect(subject.available_units).to eq(subject.esiob)
+        expect(subject.available_units('ESIOB')).to eq(subject.esiob)
       end
     end
 
     context "with A and B shares" do
-      it "preferentially returns the number of ESIOA shares" do
-        subject.esioa = rand(100)
-        subject.esiob = rand(100)
-        expect(subject.available_units).to eq(subject.esioa)
+      before(:each) do
+        subject.esioa = rand(1..100)
+        subject.esiob = rand(1..100)
+      end
+
+      EctShares::Share::SHARE_KINDS.each do |kind|
+        it "returns the number of shares of the requested kind: #{kind}" do
+          expect(subject.available_units(kind)).to eq(subject.send("#{kind.downcase}"))
+        end
+      end
+
+      it "returns 0 if the requested kind is unknown" do
+        expect(subject.available_units('bogus')).to eq(0)
       end
     end
   end
