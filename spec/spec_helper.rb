@@ -2,6 +2,7 @@ require 'bundler/setup'
 require 'ect_shares'
 require 'shoulda/matchers'
 require 'pry'
+require 'faker'
 Bundler.setup
 
 ActiveRecord::Base.establish_connection(
