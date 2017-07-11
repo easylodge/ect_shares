@@ -25,4 +25,9 @@ class EctShares::Share < ActiveRecord::Base
     end
   end
 
+  def address
+    lines = [address_line_1, address_line_2, address_line_3, address_line_4, address_line_5]
+    lines.reject!{|x| x.blank?}
+    lines.join(", ")
+  end
 end

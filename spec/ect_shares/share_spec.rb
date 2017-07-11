@@ -101,4 +101,36 @@ describe EctShares::Share do
     end
   end
 
+  describe ".address" do
+    before(:each) do
+      subject.address_line_1 = Faker::Lorem.word
+      subject.address_line_2 = Faker::Lorem.word
+      subject.address_line_3 = Faker::Lorem.word
+      subject.address_line_4 = Faker::Lorem.word
+      subject.address_line_5 = Faker::Lorem.word
+    end
+
+    it "joins address lines with commas" do
+      expected_address = [subject.address_line_1, subject.address_line_2, subject.address_line_3, subject.address_line_4, subject.address_line_5].join(", ")
+      expect(subject.address).to eq(expected_address)
+    end
+
+    it "disregards empty lines: blank" do
+      subject.address_line_2 = ''
+      expected_address = [subject.address_line_1, subject.address_line_3, subject.address_line_4, subject.address_line_5].join(", ")
+      expect(subject.address).to eq(expected_address)
+    end
+
+    it "disregards empty lines: spaces" do
+      subject.address_line_2 = '  '
+      expected_address = [subject.address_line_1, subject.address_line_3, subject.address_line_4, subject.address_line_5].join(", ")
+      expect(subject.address).to eq(expected_address)
+    end
+
+    it "disregards empty lines: nil" do
+      subject.address_line_2 = nil
+      expected_address = [subject.address_line_1, subject.address_line_3, subject.address_line_4, subject.address_line_5].join(", ")
+      expect(subject.address).to eq(expected_address)
+    end
+  end
 end
