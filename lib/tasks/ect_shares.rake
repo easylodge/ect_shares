@@ -49,9 +49,9 @@ def map_import_to_model_attrs(record)
     address_line_3: record[:address_line_3].to_s.strip,
     address_line_4: record[:address_line_4].to_s.strip,
     address_line_5: record[:address_line_5].to_s.strip,
-    postcode: record[:postos_code].to_s.strip,
-    esioa: record[:esioa_09c].to_i,
-    esiob: record[:esiob_015c].to_i,
+    postcode:  record[:postcode].to_s.strip.rjust(4, "0"), # NOTE: postcodes are treated as stings. This drops leading zeros. We need to pad them back to 4 digits as strings.
+    esioa: (record[:esioa_09c] || record[:esioa]).to_i,
+    esiob: (record[:esiob_015c] || record[:esiob]).to_i,
     phone_number: record[:phone_number].to_s.strip,
     work_number: record[:work_number].to_s.strip,
     mobile_number: record[:mobile_number].to_s.strip,
